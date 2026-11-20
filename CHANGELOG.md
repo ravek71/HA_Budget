@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 (2026-11-20)
+
+- Fix: `BudgetData.__init__` — `hass.config.path()` zwraca `str`, a kod oczekiwał
+  `Path` (`AttributeError: 'str' object has no attribute 'parent'`). Ścieżka
+  normalizowana do `Path` w konstruktorze.
+
 ## 0.1.1 (2026-11-20)
 
 - Fix: `cv.range` → `vol.Range` w schemacie usługi `get_history` — błąd importu

@@ -1,10 +1,10 @@
 # STATUS — Budżet domowy (HA_Budget)
 
-Stan na: 2026-11-20. Wersja: **0.1.1** (na dysku; GitHub: **do wgrania**).
+Stan na: 2026-11-20. Wersja: **0.1.2** (na dysku; GitHub: **do wgrania**).
 
-Uwaga: w repo istnieje tag `0.0.1` z pełnym kodem 0.1.0 — HACS instaluje z taga.
-Po wgraniu 0.1.1 trzeba utworzyć nowy tag `0.1.1` (Code → Tags → New tag), inaczej
-HACS nie zobaczy poprawki.
+Uwaga: w repo istnieje tag `0.0.1` z pełnym kodem 0.1.0 — HACS instaluje z taga,
+nie z `main`. Po każdym wgraniu poprawki trzeba tworzyć **nowy tag** (Code → Tags →
+New tag; nazwa = wersja z manifestu), inaczej HACS nie pobierze poprawki.
 
 ## Co jest zrobione
 - Integracja HACS `custom_components/budget` (domena `budget`):

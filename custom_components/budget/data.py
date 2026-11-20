@@ -36,8 +36,9 @@ def _slugify(name: str) -> str:
 class BudgetData:
     """Thread-safe access to the per-entry SQLite database."""
 
-    def __init__(self, path: Path) -> None:
-        self._path = path
+    def __init__(self, path: Path | str) -> None:
+        # hass.config.path() returns str — normalize to Path
+        self._path = Path(path)
         self._lock = threading.Lock()
         self._conn: Optional[sqlite3.Connection] = None
         self.open()
