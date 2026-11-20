@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.4 (2026-11-20)
+
+- Nowość: **karta dodawania transakcji wewnątrz integracji** — bez helperów,
+  bez YAML:
+  - `number` „Kwota do dodania” (tymczasowa kwota, nie księgowana),
+  - `select` „Kategoria do dodania” (lista kategorii, w tym wpływy),
+  - `button` „Dodaj transakcję” (księguje kwotę + kategorię i czyści formularz).
+  Wystarczy karta „Encje” z tymi 3 encjami — działa też na starych pulpitach.
+  Kwota w formularzu jest w pamięci: po restarcie HA wraca do 0.
+
 ## 0.1.3 (2026-11-20)
 
 - Fix: `sensors.py` → `sensor.py` — HA ładuje platformy jako moduły

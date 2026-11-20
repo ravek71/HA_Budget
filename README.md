@@ -3,7 +3,7 @@
 Integracja do **planowania i śledzenia domowego budżetu**: wpływy, wydatki,
 **wydatki stałe** (automatyczne na początku miesiąca), **kategorie z
 planowanymi budżetami**, **wykresy miesiąca** i **pełna historia**
-(dane zapisywane lokalnie w SQLite, przetrzwają restarty i aktualizacje).
+(dane zapisywane lokalnie w SQLite, przetrwają restarty i aktualizacje).
 
 Bez zewnętrznych wymagań — tylko standardowa biblioteka Pythona (`sqlite3`).
 
@@ -20,6 +20,9 @@ Bez zewnętrznych wymagań — tylko standardowa biblioteka Pythona (`sqlite3`).
 | `sensor.* Pozostało: <kategoria>` | budżet kategorii − wydane (brak planu = nieznany) |
 | `number.* Budżet miesięczny (plan)` | **planowany budżet na miesiąc** (edytowalny) |
 | `number.* Budżet: <kategoria>` | **planowany budżet kategorii** (edytowalny) |
+| `number.* Kwota do dodania` | **formularz karty**: tymczasowa kwota (nie księgowana, czyści się po dodaniu/restarcie) |
+| `select.* Kategoria do dodania` | **formularz karty**: cel transakcji (wpływy i wydatki) |
+| `button.* Dodaj transakcję` | **formularz karty**: księguje kwotę + kategorię jednym tapnięciem |
 
 Dodatkowo usługa `budget.get_history` zwraca ostatnie **12 miesięcy**
 (wpływy/wydatki/bilans/budżet) + szczegóły miesiąca z listą transakcji —
@@ -96,7 +99,28 @@ data:
 # date: 2026-11-20   # opcjonalnie (domyślnie: dzisiaj)
 ```
 
-### 4. Wykresy i historia
+### 4. Karta dodawania transakcji (bez helperów, bez YAML)
+
+Integracja dostarcza własny „formularz” jako encje — **nie trzeba
+tworzyć żadnych helperów** (`input_number`/`input_text` są w HA
+helperami YAML-owymi i nie mają API do tworzenia z integracji):
+
+1. Dashboard → „+ Dodaj kartę” → **Encje** (karta typu `entities` —
+   działa też na starych pulpitach).
+2. Dodaj do niej 3 encje urządzenia „Budżet domowy”:
+   - **Kwota do dodania** (`number`) — wpisz kwotę,
+   - **Kategoria do dodania** (`select`) — wybierz kategorię
+     (wpływy i wydatki),
+   - **Dodaj transakcję** (`button`) — tapnięcie księguje transakcję
+     i czyści formularz.
+
+Wpływy miesięczne: ustaw kwotę, wybierz np. „Wypłata”, tapnij
+„Dodaj transakcję”. Kwota w formularzu trzymana jest w pamięci
+integracji (po restarcie HA wraca do 0). Notatkę transakcji można
+podać tylko przez usługę `add_transaction` (karta zapisuje
+notatkę „Dodane z karty”).
+
+### 5. Wykresy i historia
 
 - Panel **Historia** w HA: czujniki `Wpływy (poprzedni miesiąc)` /
   `Wydatki (poprzedni miesiąc)` dają gotową miesięczną serię.

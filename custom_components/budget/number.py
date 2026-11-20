@@ -7,6 +7,7 @@ from typing import Any
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, NAME
@@ -74,6 +75,34 @@ class TotalBudgetNumber(BaseBudgetNumber):
         self._after_change()
 
 
+class DraftAmountNumber(BaseBudgetNumber):
+    """Staging amount for the dashboard "add transaction" card.
+
+    Setting the value does NOT book anything — the button entity
+    ("Dodaj transakcję") books the staged amount + category.
+    """
+
+    def __init__(self, entry, coordinator) -> None:
+        super().__init__(entry, coordinator, "draft_amount", "Kwota do dodania")
+        self._attr_icon = "mdi:plus-circle-outline"
+        self._attr_step = 1.0
+
+    @property
+    def native_value(self) -> float | None:
+        if not self.available:
+            return None
+        return self.coordinator.data["draft"]["amount"]
+
+    async def async_set_native_value(self, value: float) -> None:
+        try:
+            await self.hass.async_add_executor_job(
+                self.coordinator.set_draft_amount, value
+            )
+        except ValueError as err:
+            raise ServiceValidationError(str(err)) from err
+        self.coordinator.async_update_listeners()
+
+
 class CategoryBudgetNumber(BaseBudgetNumber):
     """Planned budget for one category."""
 
@@ -105,7 +134,7 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    entities: list[NumberEntity] = [TotalBudgetNumber(entry, coordinator)]
+    entities: list[NumberEntity] = [TotalBudgetNumber(entry, coordinator), DraftAmountNumber(entry, coordinator)]
     for cat in coordinator.data["categories"]:
         entities.append(CategoryBudgetNumber(entry, coordinator, cat))
     async_add_entities(entities)

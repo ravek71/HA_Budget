@@ -1,6 +1,6 @@
 # STATUS — Budżet domowy (HA_Budget)
 
-Stan na: 2026-11-20. Wersja: **0.1.3** (na dysku; GitHub: **do wgrania**).
+Stan na: 2026-11-20. Wersja: **0.1.4** (na dysku; GitHub: **do wgrania**).
 
 Uwaga: w repo istnieje tag `0.0.1` z pełnym kodem 0.1.0 — HACS instaluje z taga,
 nie z `main`. Po każdym wgraniu poprawki trzeba tworzyć **nowy tag** (Code → Tags →
@@ -25,11 +25,13 @@ HA_Budget/
 ├── README.md
 └── custom_components/budget/
     ├── __init__.py
+    ├── button.py
     ├── config_flow.py
     ├── const.py
     ├── data.py
     ├── manifest.json
     ├── number.py
+    ├── select.py
     ├── sensor.py
     ├── services.yaml
     ├── strings.json

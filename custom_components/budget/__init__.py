@@ -29,7 +29,7 @@ from .data import BudgetData
 
 log = logging.getLogger(__package__)
 
-PLATFORMS = [Platform.SENSOR, Platform.NUMBER]
+PLATFORMS = [Platform.SENSOR, Platform.NUMBER, Platform.BUTTON, Platform.SELECT]
 
 SERVICE_ADD_CATEGORY = "add_category"
 SERVICE_UPDATE_CATEGORY = "update_category"
@@ -48,6 +48,31 @@ class BudgetCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         super().__init__(hass, log, name=f"{DOMAIN}:{entry.entry_id[:8]}", update_interval=None)
         self._data = data
         self.entry = entry
+        # In-memory staging for the dashboard "add transaction" card.
+        # Deliberately NOT persisted — a restart clears a half-typed form.
+        self._draft_amount = 0.0
+        self._draft_category: Optional[str] = None
+
+    def set_draft_amount(self, value: float) -> float:
+        value = round(float(value), 2)
+        if value < 0:
+            raise ValueError("Kwota nie może być ujemna")
+        self._draft_amount = value
+        return value
+
+    def set_draft_category(self, key: str) -> str:
+        if self._data.get_category(key) is None:
+            raise ValueError(f"Brak kategorii: {key!r}")
+        self._draft_category = key
+        return key
+
+    def clear_draft(self) -> None:
+        self._draft_amount = 0.0
+        self._draft_category = None
+
+    @property
+    def draft(self) -> dict[str, Any]:
+        return {"amount": self._draft_amount, "category": self._draft_category}
 
     async def _async_update_data(self) -> dict[str, Any]:
         now = dt_util.now()
@@ -64,6 +89,7 @@ class BudgetCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "prev": prev,
             "categories": await self.hass.async_add_executor_job(d.categories),
             "total_budget": await self.hass.async_add_executor_job(d.get_total_budget),
+            "draft": self.draft,
         }
 
 

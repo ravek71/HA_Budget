@@ -1,0 +1,29 @@
+type: vertical-stack
+title: Dodaj wpływ
+cards:
+  - type: input-number
+    entity: input_number.kwota_wplyw
+    min: 1
+    max: 100000
+    step: 50
+    unit: zł
+  - type: input-text
+    entity: input_text.notatka_wplyw
+  - type: template
+    title: ""
+    content: >
+      <div style="text-align:center; padding: 4px 0;">
+        <button style="width: 100%; padding: 12px;
+          background: var(--primary-color); color: var(--primary-text-color);
+          border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;">
+          Dodaj wpływ: {{ states('input_number.kwota_wplyw') }} zł
+        </button>
+      </div>
+    actions:
+      action: perform-action
+      target:
+        service: budget.add_transaction
+      data:
+        category: "wyp_tata"
+        amount: "{{ states('input_number.kwota_wplyw') | float }}"
+        note: "{{ states('input_text.notatka_wplyw') }}"
