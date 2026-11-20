@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 (2026-11-20)
+
+- Fix: `sensors.py` → `sensor.py` — HA ładuje platformy jako moduły
+  `budget.sensor` / `budget.number`, więc plik musi mieć nazwę w liczbie
+  pojedynczej (`ModuleNotFoundError: Platform budget.sensor not found`).
+
 ## 0.1.2 (2026-11-20)
 
 - Fix: `BudgetData.__init__` — `hass.config.path()` zwraca `str`, a kod oczekiwał

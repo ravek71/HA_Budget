@@ -1,6 +1,6 @@
 # STATUS — Budżet domowy (HA_Budget)
 
-Stan na: 2026-11-20. Wersja: **0.1.2** (na dysku; GitHub: **do wgrania**).
+Stan na: 2026-11-20. Wersja: **0.1.3** (na dysku; GitHub: **do wgrania**).
 
 Uwaga: w repo istnieje tag `0.0.1` z pełnym kodem 0.1.0 — HACS instaluje z taga,
 nie z `main`. Po każdym wgraniu poprawki trzeba tworzyć **nowy tag** (Code → Tags →
@@ -30,7 +30,7 @@ HA_Budget/
     ├── data.py
     ├── manifest.json
     ├── number.py
-    ├── sensors.py
+    ├── sensor.py
     ├── services.yaml
     ├── strings.json
     └── translations/pl.json
@@ -44,7 +44,9 @@ HA_Budget/
 
 ## Uwagi techniczne
 - Kwoty zawsze > 0; kierunek (wpływ/wydatek) = typ kategorii.
-- Waluta encji: `zł` (stała w `sensors.py`/`number.py`).
+- Waluta encji: `zł` (stała w `sensor.py`/`number.py`).
+- WAŻNE: pliki platform muszą mieć nazwy w liczbie pojedynczej (`sensor.py`,
+  `number.py`) — HA importuje je jako `budget.sensor` / `budget.number`.
 - `get_history` zwraca `{months[12], month: {…by_category, transactions[]}, total_budget}` — do grafów/automatów.
 - Coordinator bez interwału — odświeżany po każdej usłudze/number i przy zmianie miesiąca.
 - `manifest.json`: `integration_type: entity`, `config_flow: true`, brak `requirements` (czysta stdlib).
