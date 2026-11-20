@@ -1,0 +1,159 @@
+# Usługi integracji "Budżet domowy" (domena: budget)
+add_category:
+  name: "Dodaj kategorię"
+  description: >-
+    Dodaje kategorię wpływu lub wydatku. Wydatki ze znacznikiem "stała" są
+    automatycznie księgowane na początku miesiąca (kwota = planowany budżet
+    kategorii).
+  fields:
+    name:
+      name: "Nazwa"
+      description: "Nazwa kategorii, np. „Jedzenie”, „Wynajem”, „Wypłata”."
+      required: true
+      example: "Jedzenie"
+    kind:
+      name: "Typ"
+      description: "income = wpływ, expense = wydatek."
+      required: false
+      default: "expense"
+      example: "expense"
+    recurring:
+      name: "Stała"
+      description: "Czy to wydatek stały (księgowany automatycznie co miesiąc)."
+      required: false
+      default: false
+    monthly_budget:
+      name: "Planowany budżet miesięczny"
+      description: "Planowany budżet kategorii (0 = bez planu). U wydatków stałych — też kwota księgowana co miesiąc."
+      required: false
+      default: 0
+      example: 1500
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true
+
+update_category:
+  name: "Zmień kategorię"
+  description: "Zmienia wybrane pola kategorii (niezmienione pozostają bez zmian)."
+  fields:
+    category:
+      name: "Kategoria"
+      description: "Klucz kategorii (z atrybutów encji lub usługi get_history)."
+      required: true
+    name:
+      name: "Nazwa"
+      required: false
+    kind:
+      name: "Typ"
+      required: false
+    recurring:
+      name: "Stała"
+      required: false
+    monthly_budget:
+      name: "Planowany budżet miesięczny"
+      required: false
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true
+
+remove_category:
+  name: "Usuń kategorię"
+  description: "Usuwa kategorię (tylko jeśli nie ma transakcji)."
+  fields:
+    category:
+      name: "Kategoria"
+      required: true
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true
+
+add_transaction:
+  name: "Dodaj transakcję"
+  description: "Księguje wpływ lub wydatek (kierunek wg typu kategorii)."
+  fields:
+    category:
+      name: "Kategoria"
+      required: true
+      example: "jedzenie"
+    amount:
+      name: "Kwota"
+      description: "Dodatnia kwota (kierunek wynika z typu kategorii)."
+      required: true
+      example: 125.5
+    date:
+      name: "Data"
+      description: "Data w formacie RRRR-MM-DD (domyślnie: dzisiaj)."
+      required: false
+      example: "2026-11-20"
+    note:
+      name: "Notatka"
+      required: false
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true
+
+delete_transaction:
+  name: "Usuń transakcję"
+  description: "Usuwa transakcję po identyfikatorze (z get_history)."
+  fields:
+    id:
+      name: "ID transakcji"
+      required: true
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true
+
+set_total_budget:
+  name: "Ustaw budżet miesięczny"
+  description: "Ustawia całkowity planowany budżet na miesiąc."
+  fields:
+    value:
+      name: "Wartość"
+      required: true
+      example: 6000
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true
+
+set_category_budget:
+  name: "Ustaw budżet kategorii"
+  description: "Ustawia planowany miesięczny budżet jednej kategorii."
+  fields:
+    category:
+      name: "Kategoria"
+      required: true
+    value:
+      name: "Wartość"
+      required: true
+      example: 1500
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true
+
+get_history:
+  name: "Pobierz historię"
+  description: >-
+    Zwraca historię: ostatnie 12 miesięcy (wpływy, wydatki, bilans, budżet)
+    oraz szczegóły podanego miesiąca (wg kategorii + lista transakcji).
+    Do użycia w szablonach:
+    service: budget.get_history / data: {} → result.month.income itd.
+  fields:
+    year:
+      name: "Rok"
+      description: "Rok miesiąca szczegółów (domyślnie: bieżący)."
+      required: false
+    month:
+      name: "Miesiąc"
+      description: "Miesiąc szczegółów 1–12 (domyślnie: bieżący)."
+      required: false
+    config_entry_id:
+      name: "ID wpisu konfiguracji"
+      required: false
+      advanced: true

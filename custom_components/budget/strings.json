@@ -1,0 +1,17 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Budżet domowy",
+        "description": "Integracja planowania budżetu: wpływy, wydatki, wydatki stałe, kategorie z budżetami, historia i wykresy. Dane zapisywane lokalnie (SQLite).",
+        "data": {
+          "name": "Nazwa budżetu",
+          "auto_recurring": "Automatycznie księguj wydatki stałe na początku miesiąca"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Ta integracja pozwala na tylko jeden budżet w instalacji"
+    }
+  }
+}
