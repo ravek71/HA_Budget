@@ -353,7 +353,7 @@ _SCHEMA_SET_CATEGORY_BUDGET = vol.Schema(
 _SCHEMA_GET_HISTORY = vol.Schema(
     {
         vol.Optional("year"): cv.positive_int,
-        vol.Optional("month"): cv.range(1, 13),
+        vol.Optional("month"): vol.Range(1, 13),
         vol.Optional("config_entry_id"): cv.string,
     }
 )
